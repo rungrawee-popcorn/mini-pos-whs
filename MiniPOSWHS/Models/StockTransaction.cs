@@ -8,10 +8,9 @@ public class StockTransaction
     public int TransactionId { get; set; }
 
     public int ProductId { get; set; }
-
     public int UserId { get; set; }
 
-    public string TransactionType { get; set; } = string.Empty;
+    public string TransactionType { get; set; } = string.Empty; // IN / OUT
 
     public int Qty { get; set; }
 

@@ -11,19 +11,18 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
-
     public DbSet<Product> Products { get; set; }
-
     public DbSet<Sale> Sales { get; set; }
-
     public DbSet<SaleDetail> SaleDetails { get; set; }
-
     public DbSet<StockTransaction> StockTransactions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+        // =========================
+        // DECIMAL PRECISION
+        // =========================
         modelBuilder.Entity<Product>()
             .Property(x => x.Price)
             .HasPrecision(18, 2);
@@ -40,6 +39,15 @@ public class AppDbContext : DbContext
             .Property(x => x.Amount)
             .HasPrecision(18, 2);
 
+        // =========================
+        // PRIMARY KEY CONFIG (FIX IMPORTANT)
+        // =========================
+        modelBuilder.Entity<StockTransaction>()
+            .HasKey(x => x.TransactionId);
+
+        // =========================
+        // SEED USER
+        // =========================
         modelBuilder.Entity<User>().HasData(
             new User
             {
@@ -47,10 +55,13 @@ public class AppDbContext : DbContext
                 Username = "admin",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("1234"),
                 Role = "Admin",
-                CreatedDate = DateTime.Now
+                CreatedDate = new DateTime(2026, 1, 1)
             }
         );
 
+        // =========================
+        // SEED PRODUCTS
+        // =========================
         modelBuilder.Entity<Product>().HasData(
             new Product
             {
@@ -59,7 +70,7 @@ public class AppDbContext : DbContext
                 ProductName = "Coke",
                 Price = 15,
                 StockQty = 100,
-                CreatedDate = DateTime.Now
+                CreatedDate = new DateTime(2026, 1, 1)
             },
             new Product
             {
@@ -68,7 +79,7 @@ public class AppDbContext : DbContext
                 ProductName = "Water",
                 Price = 10,
                 StockQty = 100,
-                CreatedDate = DateTime.Now
+                CreatedDate = new DateTime(2026, 1, 1)
             },
             new Product
             {
@@ -77,7 +88,7 @@ public class AppDbContext : DbContext
                 ProductName = "Snack",
                 Price = 20,
                 StockQty = 100,
-                CreatedDate = DateTime.Now
+                CreatedDate = new DateTime(2026, 1, 1)
             }
         );
     }

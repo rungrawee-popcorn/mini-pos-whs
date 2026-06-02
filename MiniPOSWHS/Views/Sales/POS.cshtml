@@ -1,0 +1,126 @@
+@model List<MiniPOSWHS.Models.Product>
+
+@{
+    ViewData["Title"] = "POS";
+
+    var cart = ViewBag.Cart as List<MiniPOSWHS.Models.CartItem>
+               ?? new List<MiniPOSWHS.Models.CartItem>();
+
+    decimal total = ViewBag.Total ?? 0;
+}
+
+<h2>POS System</h2>
+
+<!-- ERROR MESSAGE -->
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<!-- SEARCH -->
+<form method="get" asp-action="POS" asp-controller="Sales" class="mb-3">
+    <div class="input-group">
+        <input type="text"
+               name="keyword"
+               value="@ViewBag.Keyword"
+               class="form-control"
+               placeholder="Search product..." />
+
+        <button class="btn btn-primary" type="submit">
+            Search
+        </button>
+
+        <a asp-action="POS" asp-controller="Sales" class="btn btn-secondary">
+            Reset
+        </a>
+    </div>
+</form>
+
+<!-- PRODUCT LIST -->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductCode</td>
+                    <td>@item.ProductName</td>
+                    <td>@item.Price</td>
+                    <td>@item.StockQty</td>
+                    <td>
+                        <form method="post" asp-action="AddToCart">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <button class="btn btn-success btn-sm" type="submit">
+                                Add
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">No products found</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<!-- CART SECTION -->
+<h4>Cart Summary</h4>
+
+<form method="post" asp-action="Checkout" class="mb-3">
+    <button type="submit" class="btn btn-danger">
+        Checkout
+    </button>
+</form>
+
+@if (cart.Any())
+{
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in cart)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Price</td>
+                    <td>@item.Qty</td>
+                    <td>@(item.Price * item.Qty)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="alert alert-info">
+        <strong>Total Amount:</strong> @total
+    </div>
+}
+else
+{
+    <p>No items in cart</p>
+}
