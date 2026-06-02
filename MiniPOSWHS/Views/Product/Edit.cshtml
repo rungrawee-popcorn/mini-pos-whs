@@ -1,0 +1,41 @@
+@model MiniPOSWHS.Models.Product
+
+<h2>Edit Product</h2>
+
+<form method="post">
+
+    <input type="hidden" asp-for="ProductId" />
+
+    <div class="mb-3">
+        <label>Product Code</label>
+        <input asp-for="ProductCode" class="form-control" />
+        <span asp-validation-for="ProductCode" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Product Name</label>
+        <input asp-for="ProductName" class="form-control" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Price</label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Stock Qty</label>
+        <input asp-for="StockQty" class="form-control" />
+        <span asp-validation-for="StockQty" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Update
+    </button>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
