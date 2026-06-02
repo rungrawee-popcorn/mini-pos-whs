@@ -21,7 +21,6 @@ public class HomeController : Controller
         _context = context;
     }
 
-    // Display dashboard
     public async Task<IActionResult> Index()
     {
         var today = DateTime.Today;
@@ -40,9 +39,6 @@ public class HomeController : Controller
                 .CountAsync(x => x.StockQty <= 10)
         };
 
-        // =========================
-        // Daily Sales 
-        // =========================
         model.DailySales = await _context.Sales
             .GroupBy(x => x.SaleDate.Date)
             .Select(x => new DailySalesItem
@@ -54,25 +50,18 @@ public class HomeController : Controller
             .Take(7)
             .ToListAsync();
 
-        // =========================
-        // Top Selling Products 
-        // =========================
         model.TopSellingProducts = await _context.SaleDetails
             .Join(
                 _context.Products,
-                saleDetail => saleDetail.ProductId,
-                product => product.ProductId,
-                (saleDetail, product) => new
+                sd => sd.ProductId,
+                p => p.ProductId,
+                (sd, p) => new
                 {
-                    product.ProductCode,
-                    product.ProductName,
-                    saleDetail.Qty
+                    p.ProductCode,
+                    p.ProductName,
+                    sd.Qty
                 })
-            .GroupBy(x => new
-            {
-                x.ProductCode,
-                x.ProductName
-            })
+            .GroupBy(x => new { x.ProductCode, x.ProductName })
             .Select(x => new TopSellingProductItem
             {
                 ProductCode = x.Key.ProductCode,
@@ -84,9 +73,6 @@ public class HomeController : Controller
             .Take(5)
             .ToListAsync();
 
-        // =========================
-        // Low Stock Alert 
-        // =========================
         model.LowStockItems = await _context.Products
             .Where(x => x.StockQty <= 10)
             .OrderBy(x => x.StockQty)
@@ -101,19 +87,25 @@ public class HomeController : Controller
         return View(model);
     }
 
-    // Display privacy page
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    // Handle application errors
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    // GLOBAL ERROR PAGE
+    [AllowAnonymous]
     public IActionResult Error()
     {
         return View(new ErrorViewModel
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
         });
+    }
+
+    // ACCESS DENIED PAGE
+    [AllowAnonymous]
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
+
+    public IActionResult Privacy()
+    {
+        return View();
     }
 }

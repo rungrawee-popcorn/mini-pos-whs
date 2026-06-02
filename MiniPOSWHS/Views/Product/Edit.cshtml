@@ -2,7 +2,9 @@
 
 <h2>Edit Product</h2>
 
-<form method="post">
+<form method="post" asp-action="Edit">
+
+    @Html.AntiForgeryToken()
 
     <input type="hidden" asp-for="ProductId" />
 

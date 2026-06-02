@@ -16,7 +16,7 @@ public class ProductController : Controller
         _context = context;
     }
 
-    // Display product list
+    // LIST
     public async Task<IActionResult> Index(string keyword)
     {
         var query = _context.Products.AsQueryable();
@@ -39,13 +39,12 @@ public class ProductController : Controller
         return View(products);
     }
 
-    // Display create form
+    // CREATE
     public IActionResult Create()
     {
         return View();
     }
 
-    // Handle create product
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Product model)
@@ -55,13 +54,12 @@ public class ProductController : Controller
 
         model.ProductCode = model.ProductCode.Trim();
 
-        // CHECK DUPLICATE PRODUCT CODE
         var isDuplicate = await _context.Products
             .AnyAsync(x => x.ProductCode == model.ProductCode);
 
         if (isDuplicate)
         {
-            ModelState.AddModelError("ProductCode", "Product Code already exists");
+            ModelState.AddModelError(nameof(model.ProductCode), "Product Code already exists");
             return View(model);
         }
 
@@ -73,7 +71,7 @@ public class ProductController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // Display edit form
+    // EDIT
     public async Task<IActionResult> Edit(int id)
     {
         var product = await _context.Products.FindAsync(id);
@@ -84,7 +82,6 @@ public class ProductController : Controller
         return View(product);
     }
 
-    // Handle edit product
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(Product model)
@@ -99,15 +96,13 @@ public class ProductController : Controller
 
         model.ProductCode = model.ProductCode.Trim();
 
-        // CHECK DUPLICATE (exclude current record)
-        var isDuplicate = await _context.Products
-            .AnyAsync(x =>
-                x.ProductCode == model.ProductCode &&
-                x.ProductId != model.ProductId);
+        var isDuplicate = await _context.Products.AnyAsync(x =>
+            x.ProductCode == model.ProductCode &&
+            x.ProductId != model.ProductId);
 
         if (isDuplicate)
         {
-            ModelState.AddModelError("ProductCode", "Product Code already exists");
+            ModelState.AddModelError(nameof(model.ProductCode), "Product Code already exists");
             return View(model);
         }
 
@@ -121,7 +116,7 @@ public class ProductController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // Delete product
+    // DELETE
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
