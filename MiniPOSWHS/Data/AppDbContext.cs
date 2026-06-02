@@ -40,28 +40,29 @@ public class AppDbContext : DbContext
             .HasPrecision(18, 2);
 
         // =========================
-        // PRIMARY KEY CONFIG (FIX IMPORTANT)
+        // PRIMARY KEY CONFIG
         // =========================
         modelBuilder.Entity<StockTransaction>()
             .HasKey(x => x.TransactionId);
 
         // =========================
-        // SEED USER
+        // SEED DATA (FIXED)
         // =========================
+
         modelBuilder.Entity<User>().HasData(
             new User
             {
                 UserId = 1,
                 Username = "admin",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("1234"),
+
+                // ❗ FIX: ใช้ hash ที่ fix แล้ว (ไม่ generate runtime)
+                PasswordHash = "$2a$11$abcdefghijklmnopqrstuv1234567890ABCDEFGH",
+
                 Role = "Admin",
                 CreatedDate = new DateTime(2026, 1, 1)
             }
         );
 
-        // =========================
-        // SEED PRODUCTS
-        // =========================
         modelBuilder.Entity<Product>().HasData(
             new Product
             {

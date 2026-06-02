@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniPOSWHS", "MiniPOSWHS\MiniPOSWHS.csproj", "{C6350E9D-6FAD-4D22-A8C6-DA1F3B9CFA9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MiniPOSWHS", "MiniPOSWHS", "{DD000192-BBDD-4BE8-8F81-E681F5CBD668}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniPOSWHS.Tests", "MiniPOSWHS.Tests\MiniPOSWHS.Tests.csproj", "{20DC92E9-BD7D-42FB-A1B1-DD8E1D6F5475}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6350E9D-6FAD-4D22-A8C6-DA1F3B9CFA9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6350E9D-6FAD-4D22-A8C6-DA1F3B9CFA9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6350E9D-6FAD-4D22-A8C6-DA1F3B9CFA9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6350E9D-6FAD-4D22-A8C6-DA1F3B9CFA9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20DC92E9-BD7D-42FB-A1B1-DD8E1D6F5475}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20DC92E9-BD7D-42FB-A1B1-DD8E1D6F5475}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20DC92E9-BD7D-42FB-A1B1-DD8E1D6F5475}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20DC92E9-BD7D-42FB-A1B1-DD8E1D6F5475}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C6350E9D-6FAD-4D22-A8C6-DA1F3B9CFA9A} = {DD000192-BBDD-4BE8-8F81-E681F5CBD668}
+	EndGlobalSection
+EndGlobal

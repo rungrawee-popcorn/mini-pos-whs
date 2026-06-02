@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using MiniPOSWHS.Data;
 using MiniPOSWHS.Models;
 
@@ -18,7 +19,18 @@ public class SaleService
         if (cart == null || !cart.Any())
             throw new Exception("Cart is empty");
 
-        using var transaction = await _context.Database.BeginTransactionAsync();
+        // =========================
+        // FIX: support InMemory DB
+        // =========================
+        var isInMemory =
+            _context.Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory";
+
+        IDbContextTransaction? transaction = null;
+
+        if (!isInMemory)
+        {
+            transaction = await _context.Database.BeginTransactionAsync();
+        }
 
         try
         {
@@ -60,7 +72,6 @@ public class SaleService
                 if (product == null)
                     throw new Exception($"Product not found: {item.ProductId}");
 
-                // Sale Detail
                 var detail = new SaleDetail
                 {
                     SaleId = sale.SaleId,
@@ -93,7 +104,8 @@ public class SaleService
             // =========================
             // COMMIT
             // =========================
-            await transaction.CommitAsync();
+            if (transaction != null)
+                await transaction.CommitAsync();
 
             return sale.SaleId;
         }
@@ -102,7 +114,9 @@ public class SaleService
             // =========================
             // ROLLBACK
             // =========================
-            await transaction.RollbackAsync();
+            if (transaction != null)
+                await transaction.RollbackAsync();
+
             throw;
         }
     }
