@@ -1,8 +1,153 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model MiniPOSWHS.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h2 class="mb-4">Dashboard</h2>
+
+<div class="row">
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center border-primary">
+            <div class="card-body">
+                <h5>Total Products</h5>
+                <h2>@Model.TotalProducts</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center border-success">
+            <div class="card-body">
+                <h5>Total Sales Today</h5>
+                <h2>@Model.TotalSalesToday</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center border-info">
+            <div class="card-body">
+                <h5>Total Transactions</h5>
+                <h2>@Model.TotalTransactions</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center border-danger">
+            <div class="card-body">
+                <h5>Low Stock Products</h5>
+                <h2>@Model.LowStockProducts</h2>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<hr />
+
+<h4>Daily Sales</h4>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Total Sales</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model.DailySales.Any())
+        {
+            foreach (var item in Model.DailySales)
+            {
+                <tr>
+                    <td>@item.SaleDate.ToString("yyyy-MM-dd")</td>
+                    <td>@item.TotalAmount</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2">
+                    No sales data
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<h4>Top Selling Products</h4>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Product Code</th>
+            <th>Product Name</th>
+            <th>Total Qty Sold</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model.TopSellingProducts.Any())
+        {
+            foreach (var item in Model.TopSellingProducts)
+            {
+                <tr>
+                    <td>@item.ProductCode</td>
+                    <td>@item.ProductName</td>
+                    <td>@item.TotalQty</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3">
+                    No sales data
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<h4>Low Stock Alert</h4>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Product Code</th>
+            <th>Product Name</th>
+            <th>Stock Qty</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model.LowStockItems.Any())
+        {
+            foreach (var item in Model.LowStockItems)
+            {
+                <tr>
+                    <td>@item.ProductCode</td>
+                    <td>@item.ProductName</td>
+                    <td>@item.StockQty</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3">
+                    No low stock products
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
