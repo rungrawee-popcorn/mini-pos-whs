@@ -1,0 +1,44 @@
+@model MiniPOSWHS.ViewModels.SaleDetailViewModel
+
+@{
+    ViewData["Title"] = "Sale Detail";
+}
+
+<h2>Sale Detail</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <p><strong>Sale No:</strong> @Model.SaleNo</p>
+        <p><strong>Sale Date:</strong> @Model.SaleDate</p>
+        <p><strong>Total Amount:</strong> @Model.TotalAmount</p>
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product Code</th>
+            <th>Product Name</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.ProductCode</td>
+                <td>@item.ProductName</td>
+                <td>@item.Qty</td>
+                <td>@item.Price</td>
+                <td>@item.Amount</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">
+    Back
+</a>

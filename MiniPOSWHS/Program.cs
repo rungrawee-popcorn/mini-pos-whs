@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using MiniPOSWHS.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -34,7 +35,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 // =========================
-// Session (IMPORTANT for POS Cart)
+// Session
 // =========================
 builder.Services.AddSession(options =>
 {
@@ -47,6 +48,14 @@ builder.Services.AddSession(options =>
 // MVC
 // =========================
 builder.Services.AddControllersWithViews();
+
+// =========================
+// Culture
+// =========================
+var culture = new CultureInfo("en-US");
+
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 var app = builder.Build();
 

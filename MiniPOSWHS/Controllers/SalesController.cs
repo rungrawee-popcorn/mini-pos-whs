@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MiniPOSWHS.Data;
 using MiniPOSWHS.Models;
 using MiniPOSWHS.Services;
+using MiniPOSWHS.ViewModels;
 using System.Text.Json;
 
 namespace MiniPOSWHS.Controllers;
@@ -20,6 +21,87 @@ public class SalesController : Controller
     {
         _context = context;
         _saleService = saleService;
+    }
+
+    // =========================
+    // SALES HISTORY
+    // =========================
+    public async Task<IActionResult> Index(
+        string keyword,
+        DateTime? startDate,
+        DateTime? endDate)
+    {
+        var query = _context.Sales.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(keyword))
+        {
+            keyword = keyword.Trim();
+
+            query = query.Where(x =>
+                x.SaleNo.Contains(keyword));
+        }
+
+        if (startDate.HasValue)
+        {
+            query = query.Where(x =>
+                x.SaleDate >= startDate.Value);
+        }
+
+        if (endDate.HasValue)
+        {
+            var endOfDay = endDate.Value.Date.AddDays(1);
+
+            query = query.Where(x =>
+                x.SaleDate < endOfDay);
+        }
+
+        var sales = await query
+            .OrderByDescending(x => x.SaleDate)
+            .ToListAsync();
+
+        ViewBag.Keyword = keyword;
+        ViewBag.StartDate = startDate?.ToString("yyyy-MM-dd");
+        ViewBag.EndDate = endDate?.ToString("yyyy-MM-dd");
+
+        return View(sales);
+    }
+
+    // =========================
+    // SALES DETAIL
+    // =========================
+    public async Task<IActionResult> Detail(int id)
+    {
+        var sale = await _context.Sales
+            .FirstOrDefaultAsync(x => x.SaleId == id);
+
+        if (sale == null)
+            return NotFound();
+
+        var details = await (
+            from d in _context.SaleDetails
+            join p in _context.Products
+                on d.ProductId equals p.ProductId
+            where d.SaleId == id
+            select new SaleDetailItemViewModel
+            {
+                ProductCode = p.ProductCode,
+                ProductName = p.ProductName,
+                Qty = d.Qty,
+                Price = d.Price,
+                Amount = d.Amount
+            }
+        ).ToListAsync();
+
+        var model = new SaleDetailViewModel
+        {
+            SaleId = sale.SaleId,
+            SaleNo = sale.SaleNo,
+            SaleDate = sale.SaleDate,
+            TotalAmount = sale.TotalAmount,
+            Items = details
+        };
+
+        return View(model);
     }
 
     // =========================
@@ -47,9 +129,6 @@ public class SalesController : Controller
         return View(products);
     }
 
-    // =========================
-    // ADD TO CART
-    // =========================
     [HttpPost]
     public async Task<IActionResult> AddToCart(int productId)
     {
@@ -86,9 +165,6 @@ public class SalesController : Controller
         return RedirectToAction(nameof(POS));
     }
 
-    // =========================
-    // CHECKOUT
-    // =========================
     [HttpPost]
     public async Task<IActionResult> Checkout()
     {
@@ -114,9 +190,6 @@ public class SalesController : Controller
         return RedirectToAction(nameof(POS));
     }
 
-    // =========================
-    // CART HELPERS
-    // =========================
     private List<CartItem> GetCart()
     {
         var session = HttpContext.Session.GetString(CART_KEY);
@@ -132,8 +205,7 @@ public class SalesController : Controller
     {
         HttpContext.Session.SetString(
             CART_KEY,
-            JsonSerializer.Serialize(cart)
-        );
+            JsonSerializer.Serialize(cart));
     }
 
     private decimal GetCartTotal()

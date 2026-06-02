@@ -1,0 +1,88 @@
+@model List<MiniPOSWHS.Models.Sale>
+
+@{
+    ViewData["Title"] = "Sales History";
+}
+
+<h2>Sales History</h2>
+
+<form method="get" asp-action="Index" class="mb-3">
+    <div class="row g-2">
+
+        <div class="col-md-4">
+            <input type="text"
+                   name="keyword"
+                   value="@ViewBag.Keyword"
+                   class="form-control"
+                   placeholder="Search Sale No..." />
+        </div>
+
+        <div class="col-md-3">
+            <input type="date"
+                   name="startDate"
+                   value="@ViewBag.StartDate"
+                   class="form-control" />
+        </div>
+
+        <div class="col-md-3">
+            <input type="date"
+                   name="endDate"
+                   value="@ViewBag.EndDate"
+                   class="form-control" />
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit"
+                    class="btn btn-primary w-100">
+                Search
+            </button>
+        </div>
+
+        <div class="col-md-2">
+            <a asp-action="Index"
+               class="btn btn-secondary w-100">
+                Reset
+            </a>
+        </div>
+
+    </div>
+</form>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Sale No</th>
+            <th>Date</th>
+            <th>Total Amount</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.SaleNo</td>
+                    <td>@item.SaleDate</td>
+                    <td>@item.TotalAmount</td>
+                    <td>
+                        <a class="btn btn-primary btn-sm"
+                           href="/Sales/Detail/@item.SaleId">
+                            Detail
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">
+                    No sales found
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
