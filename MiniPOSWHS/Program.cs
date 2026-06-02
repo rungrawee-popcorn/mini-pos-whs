@@ -45,12 +45,19 @@ builder.Services.AddSession(options =>
 });
 
 // =========================
-// MVC
+// MVC + API Controllers
 // =========================
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllers(); 
 
 // =========================
-// Culture
+// Swagger
+// =========================
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// =========================
+// Culture (fix decimal/date format)
 // =========================
 var culture = new CultureInfo("en-US");
 
@@ -66,6 +73,13 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
+}
+
+// Swagger 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
@@ -85,5 +99,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllers();
 
 app.Run();
