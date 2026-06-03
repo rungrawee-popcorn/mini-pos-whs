@@ -11,7 +11,6 @@
 
 <h2>POS System</h2>
 
-<!-- ERROR MESSAGE -->
 @if (TempData["Error"] != null)
 {
     <div class="alert alert-danger">
@@ -51,38 +50,37 @@
     </thead>
 
     <tbody>
-        @if (Model != null && Model.Any())
-        {
-            foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.ProductCode</td>
-                    <td>@item.ProductName</td>
-                    <td>@item.Price</td>
-                    <td>@item.StockQty</td>
-                    <td>
-                        <form method="post" asp-action="AddToCart">
-                            <input type="hidden" name="productId" value="@item.ProductId" />
-                            <button class="btn btn-success btn-sm" type="submit">
-                                Add
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        }
-        else
+    @if (Model != null && Model.Any())
+    {
+        foreach (var item in Model)
         {
             <tr>
-                <td colspan="5">No products found</td>
+                <td>@item.ProductCode</td>
+                <td>@item.ProductName</td>
+                <td>@item.Price</td>
+                <td>@item.StockQty</td>
+                <td>
+                    <form method="post" asp-action="AddToCart">
+                        <input type="hidden" name="productId" value="@item.ProductId" />
+                        <button class="btn btn-success btn-sm" type="submit">
+                            Add
+                        </button>
+                    </form>
+                </td>
             </tr>
         }
+    }
+    else
+    {
+        <tr>
+            <td colspan="5">No products found</td>
+        </tr>
+    }
     </tbody>
 </table>
 
 <hr />
 
-<!-- CART SECTION -->
 <h4>Cart Summary</h4>
 
 <form method="post" asp-action="Checkout" class="mb-3">
@@ -100,19 +98,28 @@
                 <th>Price</th>
                 <th>Qty</th>
                 <th>Total</th>
+                <th>Action</th>
             </tr>
         </thead>
 
         <tbody>
-            @foreach (var item in cart)
-            {
-                <tr>
-                    <td>@item.ProductName</td>
-                    <td>@item.Price</td>
-                    <td>@item.Qty</td>
-                    <td>@(item.Price * item.Qty)</td>
-                </tr>
-            }
+        @foreach (var item in cart)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.Price</td>
+                <td>@item.Qty</td>
+                <td>@(item.Price * item.Qty)</td>
+                <td>
+                    <form method="post" asp-action="RemoveFromCart">
+                        <input type="hidden" name="productId" value="@item.ProductId" />
+                        <button class="btn btn-danger btn-sm">
+                            Remove
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 

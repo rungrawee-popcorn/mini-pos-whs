@@ -166,6 +166,30 @@ public class SalesController : Controller
     }
 
     [HttpPost]
+    public IActionResult RemoveFromCart(int productId)
+    {
+        var cart = GetCart();
+
+        var item = cart.FirstOrDefault(x => x.ProductId == productId);
+
+        if (item != null)
+        {
+            if (item.Qty > 1)
+            {
+                item.Qty -= 1;
+            }
+            else
+            {
+                cart.Remove(item);
+            }
+
+            SaveCart(cart);
+        }
+
+        return RedirectToAction(nameof(POS));
+    }
+
+    [HttpPost]
     public async Task<IActionResult> Checkout()
     {
         var cart = GetCart();
