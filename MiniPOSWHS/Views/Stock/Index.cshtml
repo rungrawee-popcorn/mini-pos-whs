@@ -1,0 +1,45 @@
+@model List<MiniPOSWHS.ViewModels.StockTransactionViewModel>
+
+@{
+    ViewData["Title"] = "Stock Transactions";
+}
+
+<h2 class="mb-4">Stock Transactions</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Product Code</th>
+            <th>Product Name</th>
+            <th>Transaction Type</th>
+            <th>Qty</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.TransactionId</td>
+                    <td>@item.ProductCode</td>
+                    <td>@item.ProductName</td>
+                    <td>@item.TransactionType</td>
+                    <td>@item.Qty</td>
+                    <td>@item.CreatedDate.ToString("yyyy-MM-dd HH:mm")</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">
+                    No transaction data
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

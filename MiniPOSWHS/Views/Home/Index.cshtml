@@ -6,6 +6,32 @@
 
 <h2 class="mb-4">Dashboard</h2>
 
+<!-- ========================= -->
+<!-- QUICK NAVIGATION BUTTONS -->
+<!-- ========================= -->
+<div class="mb-4">
+
+    <a href="/Product" class="btn btn-primary me-2 mb-2">
+        📦 Products
+    </a>
+
+    <a href="/Sales/POS" class="btn btn-success me-2 mb-2">
+        🛒 POS
+    </a>
+
+    <a href="/Sales" class="btn btn-info me-2 mb-2">
+        📊 Sales History
+    </a>
+
+    <a href="/Stock" class="btn btn-warning me-2 mb-2">
+        📉 Stock
+    </a>
+
+</div>
+
+<!-- ========================= -->
+<!-- SUMMARY CARDS -->
+<!-- ========================= -->
 <div class="row">
 
     <div class="col-md-3 mb-3">
@@ -48,6 +74,9 @@
 
 <hr />
 
+<!-- ========================= -->
+<!-- DAILY SALES -->
+<!-- ========================= -->
 <h4>Daily Sales</h4>
 
 <table class="table table-bordered table-striped">
@@ -59,7 +88,7 @@
     </thead>
 
     <tbody>
-        @if (Model.DailySales.Any())
+        @if (Model.DailySales != null && Model.DailySales.Any())
         {
             foreach (var item in Model.DailySales)
             {
@@ -72,9 +101,7 @@
         else
         {
             <tr>
-                <td colspan="2">
-                    No sales data
-                </td>
+                <td colspan="2">No sales data</td>
             </tr>
         }
     </tbody>
@@ -82,6 +109,9 @@
 
 <hr />
 
+<!-- ========================= -->
+<!-- TOP SELLING PRODUCTS -->
+<!-- ========================= -->
 <h4>Top Selling Products</h4>
 
 <table class="table table-bordered table-striped">
@@ -94,7 +124,7 @@
     </thead>
 
     <tbody>
-        @if (Model.TopSellingProducts.Any())
+        @if (Model.TopSellingProducts != null && Model.TopSellingProducts.Any())
         {
             foreach (var item in Model.TopSellingProducts)
             {
@@ -108,9 +138,7 @@
         else
         {
             <tr>
-                <td colspan="3">
-                    No sales data
-                </td>
+                <td colspan="3">No sales data</td>
             </tr>
         }
     </tbody>
@@ -118,6 +146,9 @@
 
 <hr />
 
+<!-- ========================= -->
+<!-- LOW STOCK ALERT -->
+<!-- ========================= -->
 <h4>Low Stock Alert</h4>
 
 <table class="table table-bordered table-striped">
@@ -130,7 +161,7 @@
     </thead>
 
     <tbody>
-        @if (Model.LowStockItems.Any())
+        @if (Model.LowStockItems != null && Model.LowStockItems.Any())
         {
             foreach (var item in Model.LowStockItems)
             {
@@ -144,9 +175,7 @@
         else
         {
             <tr>
-                <td colspan="3">
-                    No low stock products
-                </td>
+                <td colspan="3">No low stock products</td>
             </tr>
         }
     </tbody>
