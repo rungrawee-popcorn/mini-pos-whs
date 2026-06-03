@@ -33,6 +33,7 @@ public class StockController : Controller
                 ProductName = p.ProductName,
                 TransactionType = st.TransactionType,
                 Qty = st.Qty,
+                Source = st.Source,
                 CreatedDate = st.CreatedDate
             }
         ).ToListAsync();

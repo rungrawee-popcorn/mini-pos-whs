@@ -14,6 +14,7 @@
             <th>Product Name</th>
             <th>Transaction Type</th>
             <th>Qty</th>
+            <th>Source</th>
             <th>Date</th>
         </tr>
     </thead>
@@ -29,6 +30,7 @@
                     <td>@item.ProductName</td>
                     <td>@item.TransactionType</td>
                     <td>@item.Qty</td>
+                    <td>@item.Source</td>
                     <td>@item.CreatedDate.ToString("yyyy-MM-dd HH:mm")</td>
                 </tr>
             }
@@ -36,7 +38,7 @@
         else
         {
             <tr>
-                <td colspan="6">
+                <td colspan="7">
                     No transaction data
                 </td>
             </tr>

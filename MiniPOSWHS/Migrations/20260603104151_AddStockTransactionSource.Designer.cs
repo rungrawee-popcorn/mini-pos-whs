@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MiniPOSWHS.Data;
 
@@ -11,9 +12,11 @@ using MiniPOSWHS.Data;
 namespace MiniPOSWHS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260603104151_AddStockTransactionSource")]
+    partial class AddStockTransactionSource
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,9 +35,6 @@ namespace MiniPOSWHS.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
@@ -62,7 +62,6 @@ namespace MiniPOSWHS.Migrations
                         {
                             ProductId = 1,
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             Price = 15m,
                             ProductCode = "P001",
                             ProductName = "Coke",
@@ -72,7 +71,6 @@ namespace MiniPOSWHS.Migrations
                         {
                             ProductId = 2,
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             Price = 10m,
                             ProductCode = "P002",
                             ProductName = "Water",
@@ -82,7 +80,6 @@ namespace MiniPOSWHS.Migrations
                         {
                             ProductId = 3,
                             CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             Price = 20m,
                             ProductCode = "P003",
                             ProductName = "Snack",
@@ -206,6 +203,16 @@ namespace MiniPOSWHS.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PasswordHash = "$2a$11$abcdefghijklmnopqrstuv1234567890ABCDEFGH",
+                            Role = "Admin",
+                            Username = "admin"
+                        });
                 });
 #pragma warning restore 612, 618
         }

@@ -18,6 +18,7 @@
 - Price
 - StockQty
 - CreatedDate
+- IsDeleted
 
 ### Sales
 
@@ -43,4 +44,5 @@
 - UserId (FK)
 - TransactionType (IN / OUT)
 - Qty
+- Source
 - CreatedDate

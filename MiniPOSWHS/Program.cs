@@ -7,15 +7,21 @@ using MiniPOSWHS.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Database
+// =========================
+// DATABASE
+// =========================
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Services
+// =========================
+// SERVICES
+// =========================
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<SaleService>();
 
-// Auth
+// =========================
+// AUTH COOKIE
+// =========================
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -28,7 +34,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Home/AccessDenied";
     });
 
-// Session
+// =========================
+// SESSION
+// =========================
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -36,22 +44,39 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// =========================
 // MVC + API
+// =========================
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 
-// Swagger
+// =========================
+// SWAGGER
+// =========================
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Culture
+// =========================
+// CULTURE
+// =========================
 var culture = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentCulture = culture;
 CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 var app = builder.Build();
 
-// GLOBAL EXCEPTION MIDDLEWARE (STEP 3)
+// =========================
+// SEED ADMIN USER (FIX LOGIN)
+// =========================
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await DbSeeder.SeedAdmin(context);
+}
+
+// =========================
+// MIDDLEWARE
+// =========================
 app.UseMiddleware<ExceptionMiddleware>();
 
 if (!app.Environment.IsDevelopment())

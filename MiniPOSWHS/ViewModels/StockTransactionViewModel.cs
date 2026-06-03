@@ -11,6 +11,8 @@ public class StockTransactionViewModel
     public string TransactionType { get; set; } = string.Empty;
 
     public int Qty { get; set; }
+    
+    public string Source { get; set; } = string.Empty;
 
     public DateTime CreatedDate { get; set; }
 }

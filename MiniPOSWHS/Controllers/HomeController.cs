@@ -27,7 +27,9 @@ public class HomeController : Controller
 
         var model = new DashboardViewModel
         {
-            TotalProducts = await _context.Products.CountAsync(),
+            TotalProducts = await _context.Products
+                .Where(x => !x.IsDeleted)
+                .CountAsync(),
 
             TotalSalesToday = await _context.Sales
                 .Where(x => x.SaleDate.Date == today)
@@ -36,6 +38,7 @@ public class HomeController : Controller
             TotalTransactions = await _context.Sales.CountAsync(),
 
             LowStockProducts = await _context.Products
+                .Where(x => !x.IsDeleted)
                 .CountAsync(x => x.StockQty <= 10)
         };
 
@@ -51,30 +54,29 @@ public class HomeController : Controller
             .ToListAsync();
 
         model.TopSellingProducts = await _context.SaleDetails
+            .GroupBy(x => x.ProductId)
+            .Select(g => new
+            {
+                ProductId = g.Key,
+                TotalQty = g.Sum(x => x.Qty)
+            })
             .Join(
                 _context.Products,
-                sd => sd.ProductId,
+                g => g.ProductId,
                 p => p.ProductId,
-                (sd, p) => new
+                (g, p) => new TopSellingProductItem
                 {
-                    p.ProductCode,
-                    p.ProductName,
-                    sd.Qty
-                })
-            .GroupBy(x => new { x.ProductCode, x.ProductName })
-            .Select(x => new TopSellingProductItem
-            {
-                ProductCode = x.Key.ProductCode,
-                ProductName = x.Key.ProductName,
-                TotalQty = x.Sum(y => y.Qty)
-            })
+                    ProductCode = p.ProductCode,
+                    ProductName = p.ProductName,
+                    TotalQty = g.TotalQty
+                }
+            )
             .OrderByDescending(x => x.TotalQty)
-            .ThenBy(x => x.ProductCode)
             .Take(5)
             .ToListAsync();
 
         model.LowStockItems = await _context.Products
-            .Where(x => x.StockQty <= 10)
+            .Where(x => !x.IsDeleted && x.StockQty <= 10)
             .OrderBy(x => x.StockQty)
             .Select(x => new LowStockProductItem
             {
@@ -87,17 +89,12 @@ public class HomeController : Controller
         return View(model);
     }
 
-    // GLOBAL ERROR PAGE
     [AllowAnonymous]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel
-        {
-            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-        });
+        return View();
     }
 
-    // ACCESS DENIED PAGE
     [AllowAnonymous]
     public IActionResult AccessDenied()
     {

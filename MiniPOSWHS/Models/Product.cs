@@ -23,4 +23,6 @@ public class Product
     public int StockQty { get; set; }
 
     public DateTime CreatedDate { get; set; }
+
+    public bool IsDeleted { get; set; } = false;
 }

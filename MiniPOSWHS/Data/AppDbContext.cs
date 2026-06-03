@@ -46,22 +46,10 @@ public class AppDbContext : DbContext
             .HasKey(x => x.TransactionId);
 
         // =========================
-        // SEED DATA (FIXED)
+        // IMPORTANT:
+        // Removed HasData for User
+        // moved to runtime seeding (DbSeeder)
         // =========================
-
-        modelBuilder.Entity<User>().HasData(
-            new User
-            {
-                UserId = 1,
-                Username = "admin",
-
-                // ❗ FIX: ใช้ hash ที่ fix แล้ว (ไม่ generate runtime)
-                PasswordHash = "$2a$11$abcdefghijklmnopqrstuv1234567890ABCDEFGH",
-
-                Role = "Admin",
-                CreatedDate = new DateTime(2026, 1, 1)
-            }
-        );
 
         modelBuilder.Entity<Product>().HasData(
             new Product

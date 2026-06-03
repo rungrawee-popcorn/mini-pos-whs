@@ -64,11 +64,10 @@
 
 ### Test Result
 
-```text
-Passed: 15
-Failed: 0
-Skipped: 0
-```
+Test Result:
+
+- Unit tests implemented (xUnit)
+- Coverage: Core services (AuthService, SaleService)
 
 ## ⚙️ How to Run
 
@@ -118,7 +117,7 @@ https://localhost:xxxx/swagger
 - Cookie Authentication
 - Authorization
 - AntiForgeryToken
-- Session Timeout
+- Session Timeout / Cookie Expiration
 - Global Exception Handling
 
 ## 📈 Dashboard
@@ -185,4 +184,4 @@ Dashboard provides:
 
 ## 🚀 Version
 
-v1.1
+v1.3

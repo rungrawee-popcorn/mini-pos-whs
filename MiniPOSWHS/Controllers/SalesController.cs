@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,23 +37,18 @@ public class SalesController : Controller
         if (!string.IsNullOrWhiteSpace(keyword))
         {
             keyword = keyword.Trim();
-
-            query = query.Where(x =>
-                x.SaleNo.Contains(keyword));
+            query = query.Where(x => x.SaleNo.Contains(keyword));
         }
 
         if (startDate.HasValue)
         {
-            query = query.Where(x =>
-                x.SaleDate >= startDate.Value);
+            query = query.Where(x => x.SaleDate >= startDate.Value);
         }
 
         if (endDate.HasValue)
         {
             var endOfDay = endDate.Value.Date.AddDays(1);
-
-            query = query.Where(x =>
-                x.SaleDate < endOfDay);
+            query = query.Where(x => x.SaleDate < endOfDay);
         }
 
         var sales = await query
@@ -67,7 +63,7 @@ public class SalesController : Controller
     }
 
     // =========================
-    // SALES DETAIL
+    // SALES DETAIL 
     // =========================
     public async Task<IActionResult> Detail(int id)
     {
@@ -92,16 +88,14 @@ public class SalesController : Controller
             }
         ).ToListAsync();
 
-        var model = new SaleDetailViewModel
+        return View(new SaleDetailViewModel
         {
             SaleId = sale.SaleId,
             SaleNo = sale.SaleNo,
             SaleDate = sale.SaleDate,
             TotalAmount = sale.TotalAmount,
             Items = details
-        };
-
-        return View(model);
+        });
     }
 
     // =========================
@@ -109,12 +103,13 @@ public class SalesController : Controller
     // =========================
     public async Task<IActionResult> POS(string keyword)
     {
-        var query = _context.Products.AsQueryable();
+        var query = _context.Products
+            .Where(x => !x.IsDeleted)
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(keyword))
         {
             keyword = keyword.Trim();
-
             query = query.Where(x =>
                 x.ProductCode.Contains(keyword) ||
                 x.ProductName.Contains(keyword));
@@ -124,7 +119,9 @@ public class SalesController : Controller
         ViewBag.Cart = GetCart();
         ViewBag.Total = GetCartTotal();
 
-        var products = await query.ToListAsync();
+        var products = await query
+            .OrderByDescending(x => x.ProductId)
+            .ToListAsync();
 
         return View(products);
     }
@@ -132,7 +129,8 @@ public class SalesController : Controller
     [HttpPost]
     public async Task<IActionResult> AddToCart(int productId)
     {
-        var product = await _context.Products.FindAsync(productId);
+        var product = await _context.Products
+            .FirstOrDefaultAsync(x => x.ProductId == productId && !x.IsDeleted);
 
         if (product == null)
             return NotFound();
@@ -144,9 +142,7 @@ public class SalesController : Controller
         if (existingItem != null)
         {
             existingItem.Qty += 1;
-
-            if (existingItem.Qty < 1)
-                existingItem.Qty = 1;
+            if (existingItem.Qty < 1) existingItem.Qty = 1;
         }
         else
         {
@@ -161,7 +157,6 @@ public class SalesController : Controller
         }
 
         SaveCart(cart);
-
         return RedirectToAction(nameof(POS));
     }
 
@@ -174,14 +169,8 @@ public class SalesController : Controller
 
         if (item != null)
         {
-            if (item.Qty > 1)
-            {
-                item.Qty -= 1;
-            }
-            else
-            {
-                cart.Remove(item);
-            }
+            if (item.Qty > 1) item.Qty--;
+            else cart.Remove(item);
 
             SaveCart(cart);
         }
@@ -189,31 +178,44 @@ public class SalesController : Controller
         return RedirectToAction(nameof(POS));
     }
 
+    // =========================
+    // CHECKOUT 
+    // =========================
     [HttpPost]
     public async Task<IActionResult> Checkout()
     {
         var cart = GetCart();
 
-        if (cart == null || !cart.Any())
+        if (!cart.Any())
             return RedirectToAction(nameof(POS));
 
-        int userId = 1;
+        // Get real logged-in user id from cookie claim
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+        if (userIdClaim == null)
+        {
+            TempData["Error"] = "User not found";
+            return RedirectToAction(nameof(POS));
+        }
+
+        int userId = int.Parse(userIdClaim.Value);
 
         try
         {
             await _saleService.CreateSaleAsync(cart, userId);
-
             HttpContext.Session.Remove(CART_KEY);
         }
         catch (Exception ex)
         {
             TempData["Error"] = ex.Message;
-            return RedirectToAction(nameof(POS));
         }
 
         return RedirectToAction(nameof(POS));
     }
 
+    // =========================
+    // SESSION HELPERS
+    // =========================
     private List<CartItem> GetCart()
     {
         var session = HttpContext.Session.GetString(CART_KEY);
@@ -227,9 +229,7 @@ public class SalesController : Controller
 
     private void SaveCart(List<CartItem> cart)
     {
-        HttpContext.Session.SetString(
-            CART_KEY,
-            JsonSerializer.Serialize(cart));
+        HttpContext.Session.SetString(CART_KEY, JsonSerializer.Serialize(cart));
     }
 
     private decimal GetCartTotal()

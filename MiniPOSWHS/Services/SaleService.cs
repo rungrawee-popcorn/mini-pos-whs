@@ -93,6 +93,7 @@ public class SaleService
                     UserId = userId,
                     TransactionType = "OUT",
                     Qty = item.Qty,
+                    Source = "SALE",
                     CreatedDate = DateTime.Now
                 };
 
