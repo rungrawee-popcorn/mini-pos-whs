@@ -72,6 +72,13 @@ Test Result:
 
 ## ⚙️ How to Run
 
+### Clone Repository
+
+```bash
+git clone https://github.com/rungrawee-popcorn/mini-pos-whs
+cd mini-pos-whs
+```
+
 ### Restore Packages
 
 ```bash
@@ -84,6 +91,13 @@ dotnet restore
 dotnet build
 ```
 
+### Database Setup (Apply Migration)
+
+```bash
+cd MiniPOSWHS
+dotnet ef database update
+```
+
 ### Run Application
 
 ```bash
@@ -93,13 +107,20 @@ dotnet run
 ### Open Browser
 
 ```text
-https://localhost:xxxx
+https://localhost:<port>
 ```
 
 ### Swagger
 
 ```text
-https://localhost:xxxx/swagger
+https://localhost:<port>/swagger
+```
+
+### Run Unit Tests
+
+```bash
+cd mini-pos-whs
+dotnet test
 ```
 
 ## 📂 Main Modules
@@ -185,4 +206,4 @@ Dashboard provides:
 
 ## 🚀 Version
 
-v1.3
+v1.4.1
