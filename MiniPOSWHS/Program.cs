@@ -1,7 +1,8 @@
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
-using MiniPOSWHS.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using MiniPOSWHS.Data;
 using MiniPOSWHS.Services;
 using MiniPOSWHS.Middleware;
 
@@ -45,9 +46,14 @@ builder.Services.AddSession(options =>
 });
 
 // =========================
-// MVC + API
+// MVC + API + GLOBAL ANTI-FORGERY
 // =========================
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    // GLOBAL CSRF PROTECTION (AntiForgery)
+    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+});
+
 builder.Services.AddControllers();
 
 // =========================

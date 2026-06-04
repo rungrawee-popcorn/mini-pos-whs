@@ -53,7 +53,7 @@
 ### Unit Tests
 
 - AuthService Tests
-- Product Tests
+- ProductService Tests
 - SaleService Tests
 - Stock Behavior Tests
 
@@ -66,8 +66,9 @@
 
 Test Result:
 
-- Unit tests implemented (xUnit)
-- Coverage: Core services (AuthService, SaleService)
+- 15 automated tests implemented using xUnit
+- All tests passed successfully
+- EF Core InMemory Database used for isolated testing
 
 ## ⚙️ How to Run
 

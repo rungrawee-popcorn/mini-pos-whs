@@ -3,7 +3,6 @@
 ## 👤 1. Authentication
 
 - [ ] Admin login ได้
-- [ ] Cashier login ได้
 - [ ] Login ด้วย password ถูกต้องเท่านั้น
 - [ ] Login ผิด → ต้องเข้าไม่ได้
 - [ ] Logout แล้ว session หาย
@@ -38,7 +37,7 @@
 ## 📉 4. Stock Management
 
 - [ ] Stock ลดเมื่อขาย
-- [ ] Stock เพิ่มได้ (ถ้ามี stock-in feature)
+- [ ] Stock เพิ่มได้
 - [ ] มี StockTransaction log
 - [ ] Transaction type ถูกต้อง (IN / OUT)
 
@@ -66,7 +65,6 @@
 
 - [ ] ระบบไม่ crash เมื่อข้อมูลผิด
 - [ ] Error message เข้าใจง่าย
-- [ ] Transaction rollback ทำงาน
 - [ ] ระบบทำงานต่อได้หลัง error
 
 ---
@@ -83,4 +81,3 @@
 
 - [ ] System Ready for Production
 - [ ] No critical bug
-- [ ] User can operate without developer help

@@ -61,10 +61,18 @@
                 <td>@item.StockQty</td>
                 <td>
                     <form method="post" asp-action="AddToCart">
-                        <input type="hidden" name="productId" value="@item.ProductId" />
-                        <button class="btn btn-success btn-sm" type="submit">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="productId"
+                               value="@item.ProductId" />
+
+                        <button class="btn btn-success btn-sm"
+                                type="submit">
                             Add
                         </button>
+
                     </form>
                 </td>
             </tr>
@@ -84,9 +92,13 @@
 <h4>Cart Summary</h4>
 
 <form method="post" asp-action="Checkout" class="mb-3">
+
+    @Html.AntiForgeryToken()
+
     <button type="submit" class="btn btn-danger">
         Checkout
     </button>
+
 </form>
 
 @if (cart.Any())
@@ -112,10 +124,17 @@
                 <td>@(item.Price * item.Qty)</td>
                 <td>
                     <form method="post" asp-action="RemoveFromCart">
-                        <input type="hidden" name="productId" value="@item.ProductId" />
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="productId"
+                               value="@item.ProductId" />
+
                         <button class="btn btn-danger btn-sm">
                             Remove
                         </button>
+
                     </form>
                 </td>
             </tr>
